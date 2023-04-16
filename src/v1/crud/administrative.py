@@ -11,17 +11,6 @@ def create_employee(db:Session, data:schemas.EmployeesEventBase):
     
 
 def fetch_all_employees(session: Session, pagination:schemas.Pagination = None, search_user_id = None,search_producer_id=None, colums =[models.User] ,status=None):
-    # Crie a junção entre a tabela User e a tabela EmployeesEvents
-    user_lecturer_event_join = models.User.__table__.join(
-        models.EmployeesEvents.__table__,
-        models.User.id == models.EmployeesEvents.user_id
-    )
-
-    # Crie a junção entre a tabela Event e a tabela EmployeesEvents
-    event_lecturer_event_join = models.Event.__table__.join(
-        models.EmployeesEvents.__table__,
-        models.Event.id == models.EmployeesEvents.event_id
-    )
 
     # Crie a consulta unindo as três tabelas
     query = (
