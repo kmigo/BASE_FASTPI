@@ -1,0 +1,2 @@
+alembic revision --autogenerate -m "uuid 2"
+alembic upgrade head 
