@@ -7,11 +7,11 @@ from fastapi.security import (
     SecurityScopes,
 )
 from . import database
-from .. import schemas
-from typing import List, Union
+from ..schemas import users
+from typing import List
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from pydantic import BaseModel, ValidationError
+from pydantic import  ValidationError
 import os
 from sqlalchemy.orm import Session
 
@@ -28,7 +28,7 @@ oauth2_scheme = OAuth2PasswordBearer(
 def get_user(db:Session,id_user):
     users = db.execute("select * from users where id = :id_user",{'id_user':id_user})
     if len(users)>=1:
-        return schemas.User(*users[0])
+        return users.User(*users[0])
     return None
         
 
@@ -67,7 +67,7 @@ async def get_current_user(
         if username is None:
             raise credentials_exception
         token_scopes = payload.get("scopes", [])
-        token_data = schemas.TokenData(scopes=token_scopes, username=username)
+        token_data = users.TokenData(scopes=token_scopes, username=username)
     except (JWTError, ValidationError):
         raise credentials_exception
     user = get_user(db, username=token_data.id)
@@ -83,7 +83,7 @@ async def get_current_user(
     return user
 
 async def get_current_active_user(
-    current_user: Annotated[schemas.User, Security(get_current_user, scopes=["me"])]
+    current_user: Annotated[users.User, Security(get_current_user, scopes=["me"])]
 ):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")

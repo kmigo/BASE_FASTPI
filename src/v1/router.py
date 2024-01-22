@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from . import routes
+from .depends.database import BASE,engine
+# create tables
+BASE.metadata.create_all(bind=engine)
+
+
 
 v1 = FastAPI()
 
